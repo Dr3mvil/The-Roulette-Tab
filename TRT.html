@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roulette Tab</title>
+
+  <style>
+    
+  </style>
+
+  
+</head>
+<body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Roulette Tab</title>
+    <meta name="description" content="A unique random number generator that ensures each number is only picked once before looping.">
+    <meta name="keywords" content="random number generator, unique numbers, roulette, number picker">
+    <meta name="author" content="Your Name">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f8f9fa;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            background-color: #3e125c;
+            color: white;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #console {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid black;
+            background-color: #ffffff;
+            text-align: left;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Roulette Tab</h1>
+    <p>Choose a random number out of a bag and get a word next to it.</p>
+    <label for="min">Min:</label>
+    <input type="number" id="min" value="1">
+    <label for="max">Max:</label>
+    <input type="number" id="max" value="10">
+    <br>
+    <label for="wordsInput">Enter words (comma separated):</label>
+    <input type="text" id="wordsInput" placeholder="e.g. Happy, Sad">
+    <br>
+    <label for="countsInput">Enter counts (comma separated):</label>
+    <input type="text" id="countsInput" placeholder="e.g. 2, 8">
+    <br>
+    <button onclick="updateRange()">Set Range</button>
+    <button onclick="generateNumber()">Generate Number</button>
+    <button onclick="toggleConsole()">Toggle Console</button>
+    <button onclick="clearConsole()">Clear Console</button>
+    <div id="output"></div>
+    <div id="console" style="display: none;"></div>
+    <script>
+        let numbers = [];
+        let min = 1, max = 10;
+        let wordAssignments = [];
+
+        function resetNumbers() {
+            numbers = [];
+            for (let i = min; i <= max; i++) {
+                numbers.push(i);
+            }
+            assignWordsToNumbers();
+        }
+
+        function assignWordsToNumbers() {
+            let wordsInput = document.getElementById("wordsInput").value;
+            let countsInput = document.getElementById("countsInput").value;
+            
+            if (wordsInput && countsInput) {
+                let wordList = wordsInput.split(",").map(word => word.trim());
+                let countList = countsInput.split(",").map(count => parseInt(count.trim()));
+                
+                if (wordList.length !== countList.length) {
+                    alert("Please make sure the number of words matches the number of counts.");
+                    return;
+                }
+
+                // Create the words pool
+                let words = [];
+                for (let i = 0; i < wordList.length; i++) {
+                    for (let j = 0; j < countList[i]; j++) {
+                        words.push(wordList[i]);
+                    }
+                }
+
+                // Shuffle the words to randomize the assignment
+                shuffleArray(words);
+
+                // Assign shuffled words to numbers
+                wordAssignments = {};
+                for (let i = 0; i < numbers.length; i++) {
+                    wordAssignments[numbers[i]] = words[i % words.length]; // Wrap around if more numbers than words
+                }
+            } else {
+                alert("Please enter both words and counts.");
+                return;
+            }
+        }
+
+        function updateRange() {
+            min = parseInt(document.getElementById("min").value);
+            max = parseInt(document.getElementById("max").value);
+            
+            if (isNaN(min) || isNaN(max) || min >= max) {
+                alert("Please enter a valid range where min is less than max.");
+                return;
+            }
+            
+            resetNumbers();
+        }
+
+        function generateNumber() {
+            if (numbers.length === 0) {
+                document.getElementById("output").innerText = "Looped!";
+                logToConsole("You have looped");
+                resetNumbers();
+                return;
+            }
+            let index = Math.floor(Math.random() * numbers.length);
+            let number = numbers.splice(index, 1)[0];
+            let word = wordAssignments[number]; // Get the word assigned to this number
+            document.getElementById("output").innerText = "Generated Number: " + number + " - " + word;
+            // Reassign the word to the number after it's used
+            wordAssignments[number] = getRandomWord();
+        }
+
+        function getRandomWord() {
+            let words = Object.values(wordAssignments);
+            return words[Math.floor(Math.random() * words.length)];
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function toggleConsole() {
+            let consoleDiv = document.getElementById("console");
+            consoleDiv.style.display = consoleDiv.style.display === "none" ? "block" : "none";
+        }
+
+        function logToConsole(message) {
+            let consoleDiv = document.getElementById("console");
+            consoleDiv.innerHTML += message + "<br>";
+        }
+
+        function clearConsole() {
+            document.getElementById("console").innerHTML = "";
+        }
+    </script>
+</body>
+</html>
+
+
+  <script>
+    
+  </script>
+</body>
+</html>
